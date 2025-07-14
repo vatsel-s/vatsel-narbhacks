@@ -1,3 +1,6 @@
+import { query } from "./_generated/server";
+import { v } from "convex/values";
+
 export function missingEnvVariableUrl(envVarName: string, whereToGet: string) {
   const deployment = deploymentName();
   if (!deployment) return `Missing ${envVarName} in environment variables.`;
@@ -14,3 +17,10 @@ export function deploymentName() {
   const regex = new RegExp("https://(.+).convex.cloud");
   return regex.exec(url)?.[1];
 }
+
+export const countTable = query({
+  args: { table: v.string() },
+  handler: async (ctx, args) => {
+    return await ctx.db.query(args.table).collect().then((docs) => docs.length);
+  },
+});

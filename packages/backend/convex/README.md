@@ -88,3 +88,13 @@ function handleButtonPress() {
 Use the Convex CLI to push your functions to a deployment. See everything
 the Convex CLI can do by running `npx convex -h` in your project root
 directory. To learn more, launch the docs with `npx convex docs`.
+
+## Seeding Pregenerated Data
+
+To seed pregenerated data for recipes, nutrition categories, and pantry items, run the provided seed script:
+
+```sh
+npx ts-node seed.ts
+```
+
+This script is idempotent and can be run multiple times safely. It will populate the `recipes`, `nutritionCategories`, and `pantryItems` tables with default data if they are empty.
