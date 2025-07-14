@@ -14,9 +14,12 @@ type NavigationItem = {
   current: boolean;
 };
 
-const navigation: NavigationItem[] = [
-  { name: "Benefits", href: "#Benefits", current: true },
-  { name: "Reviews", href: "#reviews", current: false },
+const navigation = [
+  { name: "Home", href: "/", current: true },
+  { name: "Pantry", href: "/pantry", current: false },
+  { name: "Recipes", href: "/recipes", current: false },
+  { name: "Nutrition", href : "/nutrition", current: false},
+  { name: "Friends", href: "/friends", current: false },
 ];
 
 export default function Header() {
@@ -36,35 +39,25 @@ export default function Header() {
                 <div className="sm:flex hidden shrink-0 items-center">
                   <Logo />
                 </div>
-                {pathname === "/" && (
-                  <div className="flex flex-1 items-center justify-center ">
-                    <div className="hidden sm:ml-6 sm:block">
-                      <ul className="flex space-x-28">
-                        {navigation.map((item) => (
-                          <li key={item.name}>
-                            <Link
-                              href={item.href}
-                              className="text-[#2D2D2D] text-center text-xl not-italic font-normal leading-[normal]"
-                              aria-current={item.current ? "page" : undefined}
-                            >
-                              {item.name}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                <div className="flex flex-1 items-center justify-center ">
+                  <div className="hidden sm:ml-6 sm:block">
+                    <ul className="flex space-x-28">
+                      {navigation.map((item) => (
+                        <li key={item.name}>
+                          <Link
+                            href={item.href}
+                            className="text-[#2D2D2D] text-center text-xl not-italic font-normal leading-[normal]"
+                            aria-current={item.current ? "page" : undefined}
+                          >
+                            {item.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                )}
+                </div>
                 {user ? (
                   <div className="hidden sm:flex absolute inset-y-0 right-0 gap-6 items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                    <Link href="/notes">
-                      <button
-                        type="button"
-                        className=" text-white text-center text-xl not-italic font-normal leading-[normal] font-montserrat px-[22px] py-[11px] button"
-                      >
-                        See your Notes
-                      </button>
-                    </Link>
                     <UserNav
                       image={user?.imageUrl}
                       name={user?.fullName!}
