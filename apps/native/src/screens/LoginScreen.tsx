@@ -3,8 +3,16 @@ import { StyleSheet, View, Text, TouchableOpacity, Image, Alert } from "react-na
 import { RFValue } from "react-native-responsive-fontsize";
 import { useOAuth, useUser, useAuth } from "@clerk/clerk-expo";
 import { AntDesign } from "@expo/vector-icons";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-const LoginScreen = ({ navigation }) => {
+type RootStackParamList = {
+  LoginScreen: undefined;
+  MainApp: undefined;
+};
+
+type Props = NativeStackScreenProps<RootStackParamList, "LoginScreen">;
+
+const LoginScreen = ({ navigation }: Props) => {
   const { isLoaded: userLoaded, user } = useUser();
   const { isLoaded: authLoaded, isSignedIn } = useAuth();
   
@@ -17,7 +25,7 @@ const LoginScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (isSignedIn) {
-      navigation.navigate("NotesDashboardScreen");
+      navigation.navigate("MainApp");
     }
   }, [userLoaded, authLoaded, isSignedIn, user]);
 
@@ -30,7 +38,7 @@ const LoginScreen = ({ navigation }) => {
         
         if (createdSessionId) {
           await setActive({ session: createdSessionId });
-          navigation.navigate("NotesDashboardScreen");
+          navigation.navigate("MainApp");
         } else {
           // Handle sign-up flow for new users
           if (signUp && signUp.status === "missing_requirements") {
@@ -49,7 +57,7 @@ const LoginScreen = ({ navigation }) => {
                 
                 if (newSessionId) {
                   await setActive({ session: newSessionId });
-                  navigation.navigate("NotesDashboardScreen");
+                  navigation.navigate("MainApp");
                 }
               } catch (updateError) {
                 Alert.alert(
@@ -65,7 +73,7 @@ const LoginScreen = ({ navigation }) => {
                 
                 if (newSessionId) {
                   await setActive({ session: newSessionId });
-                  navigation.navigate("NotesDashboardScreen");
+                  navigation.navigate("MainApp");
                 }
               } catch (signUpError) {
                 // Sign-up error handled silently
@@ -86,7 +94,7 @@ const LoginScreen = ({ navigation }) => {
         
         if (createdSessionId) {
           await setActive({ session: createdSessionId });
-          navigation.navigate("NotesDashboardScreen");
+          navigation.navigate("MainApp");
         }
       }
     } catch (err) {

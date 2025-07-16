@@ -1,11 +1,12 @@
-"use client";
-
+import Header from "@/components/Header";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function PantryPalHome() {
   return (
-    <main className="bg-[#EDEDED] min-h-screen">      {/* Hero Section */}
+    <main className="bg-[#EDEDED] min-h-screen">
+      <Header />
+      {/* Hero Section */}
       <section className="bg_image">
         <div className="container py-16 sm:py-36 px-6 sm:px-0 flex flex-col-reverse sm:flex-row items-center justify-between">
           <div className="max-w-xl">
@@ -64,6 +65,7 @@ export default function PantryPalHome() {
           </h3>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 z-10 ">
             <div className="flex flex-col items-center bg-white border rounded-[17px] py-8 px-6 border-solid border-[#B8B5B5] shadow-xl">
+              <Image src="/images/pantry.png" width={80} height={80} alt="Pantry" className="mb-4" />
               <h4 className="text-black text-[24px] sm:text-[32px] not-italic font-medium leading-[90.3%] tracking-[-1.05px] pb-2 font-montserrat">
                 Pantry Tracking
               </h4>
@@ -72,6 +74,7 @@ export default function PantryPalHome() {
               </p>
             </div>
             <div className="flex flex-col items-center bg-white border rounded-[17px] py-8 px-6 border-solid border-[#B8B5B5] shadow-xl">
+              <Image src="/images/recipes.png" width={80} height={80} alt="Recipes" className="mb-4" />
               <h4 className="text-black text-[24px] sm:text-[32px] not-italic font-medium leading-[90.3%] tracking-[-1.05px] pb-2 font-montserrat">
                 Smart Recipes
               </h4>
@@ -80,6 +83,7 @@ export default function PantryPalHome() {
               </p>
             </div>
             <div className="flex flex-col items-center bg-white border rounded-[17px] py-8 px-6 border-solid border-[#B8B5B5] shadow-xl">
+              <Image src="/images/friends.png" width={80} height={80} alt="Friends" className="mb-4" />
               <h4 className="text-black text-[24px] sm:text-[32px] not-italic font-medium leading-[90.3%] tracking-[-1.05px] pb-2 font-montserrat">
                 Share with Friends
               </h4>

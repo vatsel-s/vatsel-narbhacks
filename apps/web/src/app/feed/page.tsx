@@ -4,6 +4,7 @@ import { useQuery } from "convex/react";
 import { api } from "@packages/backend/convex/_generated/api";
 import { useUser, useClerk } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
+import type { UserResource } from "@clerk/types";
 
 export default function FeedPage() {
   const { user } = useUser();
@@ -29,10 +30,10 @@ export default function FeedPage() {
   const [friendInfo, setFriendInfo] = useState<Record<string, { name: string; email: string }> | null>(null);
   useEffect(() => {
     async function fetchFriendInfo() {
-      if (!friendIds || friendIds.length === 0) return;
-      const users = await clerk.client.users.getUserList({ userId: friendIds });
+      if (!friendIds || friendIds.length === 0 || !clerk) return;
+      const users = await clerk.users.getUserList({ userId: friendIds });
       const info: Record<string, { name: string; email: string }> = {};
-      users.forEach(u => {
+      (users as UserResource[]).forEach((u) => {
         info[u.id] = {
           name: u.fullName || u.username || u.emailAddresses[0]?.emailAddress || u.id,
           email: u.emailAddresses[0]?.emailAddress || u.id,
@@ -40,8 +41,10 @@ export default function FeedPage() {
       });
       setFriendInfo(info);
     }
-    fetchFriendInfo();
-  }, [friendIds, clerk.client.users]);
+    if (clerk) {
+      fetchFriendInfo();
+    }
+  }, [friendIds, clerk]);
 
   // Sort comments by timestamp descending
   const sortedComments = friendComments.sort((a: any, b: any) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());

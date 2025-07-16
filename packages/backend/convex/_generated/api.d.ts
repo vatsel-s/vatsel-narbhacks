@@ -22,6 +22,7 @@ import type * as notes from "../notes.js";
 import type * as nutritionCategories from "../nutritionCategories.js";
 import type * as nutritionGoals from "../nutritionGoals.js";
 import type * as openai from "../openai.js";
+import type * as recipeInstructions from "../recipeInstructions.js";
 import type * as recipes from "../recipes.js";
 import type * as utils from "../utils.js";
 
@@ -43,6 +44,7 @@ declare const fullApi: ApiFromModules<{
   nutritionCategories: typeof nutritionCategories;
   nutritionGoals: typeof nutritionGoals;
   openai: typeof openai;
+  recipeInstructions: typeof recipeInstructions;
   recipes: typeof recipes;
   utils: typeof utils;
 }>;

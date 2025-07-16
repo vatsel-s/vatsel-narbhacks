@@ -15,11 +15,12 @@ type NavigationItem = {
 };
 
 const navigation = [
-  { name: "Home", href: "/", current: true },
-  { name: "Pantry", href: "/pantry", current: false },
-  { name: "Recipes", href: "/recipes", current: false },
-  { name: "Nutrition", href : "/nutrition", current: false},
-  { name: "Friends", href: "/friends", current: false },
+  { name: "Home", href: "/" },
+  { name: "Pantry", href: "/pantry" },
+  { name: "Recipes", href: "/recipes" },
+  { name: "Nutrition", href: "/nutrition" },
+  { name: "Friends", href: "/friends" },
+  { name: "Feed", href: "/feed" }, // Added Feed page
 ];
 
 export default function Header() {
@@ -42,17 +43,25 @@ export default function Header() {
                 <div className="flex flex-1 items-center justify-center ">
                   <div className="hidden sm:ml-6 sm:block">
                     <ul className="flex space-x-28">
-                      {navigation.map((item) => (
-                        <li key={item.name}>
-                          <Link
-                            href={item.href}
-                            className="text-[#2D2D2D] text-center text-xl not-italic font-normal leading-[normal]"
-                            aria-current={item.current ? "page" : undefined}
-                          >
-                            {item.name}
-                          </Link>
-                        </li>
-                      ))}
+                      {navigation.map((item) => {
+                        const isCurrent =
+                          item.href === "/"
+                            ? pathname === "/"
+                            : pathname.startsWith(item.href);
+                        return (
+                          <li key={item.name}>
+                            <Link
+                              href={item.href}
+                              className={`text-[#2D2D2D] text-center text-xl not-italic font-normal leading-[normal] ${
+                                isCurrent ? "font-bold underline" : ""
+                              }`}
+                              aria-current={isCurrent ? "page" : undefined}
+                            >
+                              {item.name}
+                            </Link>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 </div>
@@ -98,17 +107,25 @@ export default function Header() {
 
           <DisclosurePanel className="sm:hidden">
             <div className="space-y-1 px-2 pb-3 pt-2 flex flex-col gap-3 items-start">
-              {navigation.map((item) => (
-                <DisclosureButton
-                  key={item.name}
-                  as={Link}
-                  href={item.href}
-                  className="text-[#2D2D2D] text-center text-xl not-italic font-normal leading-[normal]"
-                  aria-current={item.current ? "page" : undefined}
-                >
-                  {item.name}
-                </DisclosureButton>
-              ))}
+              {navigation.map((item) => {
+                const isCurrent =
+                  item.href === "/"
+                    ? pathname === "/"
+                    : pathname.startsWith(item.href);
+                return (
+                  <DisclosureButton
+                    key={item.name}
+                    as={Link}
+                    href={item.href}
+                    className={`text-[#2D2D2D] text-center text-xl not-italic font-normal leading-[normal] ${
+                      isCurrent ? "font-bold underline" : ""
+                    }`}
+                    aria-current={isCurrent ? "page" : undefined}
+                  >
+                    {item.name}
+                  </DisclosureButton>
+                );
+              })}
               <div className="flex gap-6 items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <Link
                   href="/notes"
