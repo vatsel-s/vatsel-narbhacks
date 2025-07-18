@@ -1,21 +1,19 @@
-import React, { useEffect } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Image, Alert } from "react-native";
-import { RFValue } from "react-native-responsive-fontsize";
-import { useOAuth, useUser, useAuth } from "@clerk/clerk-expo";
+import { useAuth, useOAuth } from "@clerk/clerk-expo";
 import { AntDesign } from "@expo/vector-icons";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useEffect } from "react";
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { RFValue } from "react-native-responsive-fontsize";
 
-type RootStackParamList = {
-  LoginScreen: undefined;
-  MainApp: undefined;
-};
+const LoginScreen = ({ navigation }) => {
+  const { isSignedIn } = useAuth();
 
-type Props = NativeStackScreenProps<RootStackParamList, "LoginScreen">;
-
-const LoginScreen = ({ navigation }: Props) => {
-  const { isLoaded: userLoaded, user } = useUser();
-  const { isLoaded: authLoaded, isSignedIn } = useAuth();
-  
   const { startOAuthFlow: startGoogleAuthFlow } = useOAuth({
     strategy: "oauth_google",
   });
@@ -25,41 +23,43 @@ const LoginScreen = ({ navigation }: Props) => {
 
   useEffect(() => {
     if (isSignedIn) {
-      navigation.navigate("MainApp");
+      navigation.navigate("NotesDashboardScreen");
     }
-  }, [userLoaded, authLoaded, isSignedIn, user]);
+  }, [isSignedIn, navigation.navigate]);
 
   const onPress = async (authType: string) => {
     try {
       if (authType === "google") {
         const result = await startGoogleAuthFlow();
-        
+
         const { createdSessionId, setActive, signIn, signUp } = result;
-        
+
         if (createdSessionId) {
           await setActive({ session: createdSessionId });
-          navigation.navigate("MainApp");
+          navigation.navigate("NotesDashboardScreen");
         } else {
           // Handle sign-up flow for new users
           if (signUp && signUp.status === "missing_requirements") {
             // Check if phone number is truly required or optional
-            const isPhoneRequired = signUp.requiredFields.includes("phone_number");
-            
+            const isPhoneRequired =
+              signUp.requiredFields.includes("phone_number");
+
             if (isPhoneRequired) {
               // If phone is required, we need to handle this differently
               // For now, just try to create the account anyway
               try {
                 await signUp.update({
-                  phoneNumber: "+1234567890" // Dummy number - you should handle this properly
+                  phoneNumber: "+1234567890", // Dummy number - you should handle this properly
                 });
-                
-                const { createdSessionId: newSessionId } = await signUp.create();
-                
+
+                const { createdSessionId: newSessionId } =
+                  await signUp.create();
+
                 if (newSessionId) {
                   await setActive({ session: newSessionId });
-                  navigation.navigate("MainApp");
+                  navigation.navigate("NotesDashboardScreen");
                 }
-              } catch (updateError) {
+              } catch (_updateError) {
                 Alert.alert(
                   "Configuration Issue",
                   "Your Clerk dashboard requires a phone number for sign-ups. Please update your Clerk dashboard settings to make phone number optional, or implement a phone number collection screen.",
@@ -69,17 +69,18 @@ const LoginScreen = ({ navigation }: Props) => {
             } else {
               // Phone is optional, just create the user
               try {
-                const { createdSessionId: newSessionId } = await signUp.create();
-                
+                const { createdSessionId: newSessionId } =
+                  await signUp.create();
+
                 if (newSessionId) {
                   await setActive({ session: newSessionId });
-                  navigation.navigate("MainApp");
+                  navigation.navigate("NotesDashboardScreen");
                 }
-              } catch (signUpError) {
+              } catch (_signUpError) {
                 // Sign-up error handled silently
               }
             }
-          } else if (signIn && signIn.firstFactorVerification?.error) {
+          } else if (signIn?.firstFactorVerification?.error) {
             Alert.alert(
               "Sign In Error",
               "This Google account is not associated with an existing user. Please sign up first.",
@@ -89,12 +90,12 @@ const LoginScreen = ({ navigation }: Props) => {
         }
       } else if (authType === "apple") {
         const result = await startAppleAuthFlow();
-        
+
         const { createdSessionId, setActive } = result;
-        
+
         if (createdSessionId) {
           await setActive({ session: createdSessionId });
-          navigation.navigate("MainApp");
+          navigation.navigate("NotesDashboardScreen");
         }
       }
     } catch (err) {

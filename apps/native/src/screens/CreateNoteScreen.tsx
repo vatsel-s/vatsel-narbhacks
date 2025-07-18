@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  Dimensions,
-  TouchableOpacity,
-  TextInput,
-  Keyboard,
-  Animated,
-  Alert,
-  ActivityIndicator,
-} from "react-native";
-import { RFValue } from "react-native-responsive-fontsize";
 import { AntDesign } from "@expo/vector-icons";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { api } from "@packages/backend/convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
+import { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Animated,
+  Dimensions,
+  Image,
+  Keyboard,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { RFValue } from "react-native-responsive-fontsize";
 
 const { width } = Dimensions.get("window");
 
@@ -44,7 +44,7 @@ export default function CreateNoteScreen({ navigation }) {
           duration: 300,
           useNativeDriver: true,
         }).start();
-      },
+      }
     );
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
@@ -55,7 +55,7 @@ export default function CreateNoteScreen({ navigation }) {
           duration: 300,
           useNativeDriver: true,
         }).start();
-      },
+      }
     );
 
     // Clean up function
@@ -63,7 +63,7 @@ export default function CreateNoteScreen({ navigation }) {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
-  }, []);
+  }, [footerY]);
 
   // Calculate the position of the footer based on the Animated.Value
   const footerTranslateY = footerY.interpolate({
@@ -72,7 +72,6 @@ export default function CreateNoteScreen({ navigation }) {
   });
 
   const createUserNote = async () => {
-
     // Validation
     if (!noteTitle.trim()) {
       Alert.alert("Error", "Please enter a title for your note");
@@ -84,25 +83,27 @@ export default function CreateNoteScreen({ navigation }) {
     }
 
     setIsCreating(true);
-    
+
     try {
-      const noteId = await createNote({
+      const _noteId = await createNote({
         title: noteTitle.trim(),
         content: noteContent.trim(),
         isSummary: isAdvancedSummarizationEnabled,
       });
       navigation.navigate("NotesDashboardScreen");
     } catch (error) {
-      
       let errorMessage = "Failed to create note. ";
       if (error.message?.includes("User not found")) {
         errorMessage += "Please make sure you're logged in.";
-      } else if (error.message?.includes("NetworkError") || error.message?.includes("Failed to fetch")) {
+      } else if (
+        error.message?.includes("NetworkError") ||
+        error.message?.includes("Failed to fetch")
+      ) {
         errorMessage += "Please check your internet connection.";
       } else {
         errorMessage += error.message || "Please try again.";
       }
-      
+
       Alert.alert("Error", errorMessage);
     } finally {
       setIsCreating(false);
@@ -198,9 +199,12 @@ export default function CreateNoteScreen({ navigation }) {
           { transform: [{ translateY: footerTranslateY }] },
         ]}
       >
-        <TouchableOpacity 
-          onPress={createUserNote} 
-          style={[styles.newNoteButton, isCreating && styles.newNoteButtonDisabled]}
+        <TouchableOpacity
+          onPress={createUserNote}
+          style={[
+            styles.newNoteButton,
+            isCreating && styles.newNoteButtonDisabled,
+          ]}
           disabled={isCreating}
         >
           {isCreating ? (

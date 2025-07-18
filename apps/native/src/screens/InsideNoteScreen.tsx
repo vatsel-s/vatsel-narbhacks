@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
+  Dimensions,
+  Image,
+  ScrollView,
   StyleSheet,
   Text,
-  View,
-  Image,
-  Dimensions,
   TouchableOpacity,
-  ScrollView,
+  View,
 } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 
