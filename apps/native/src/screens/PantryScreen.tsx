@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { View, FlatList, Text, TextInput, TouchableOpacity, StyleSheet, Modal, Button } from 'react-native';
+import { View, FlatList, Text, TextInput, TouchableOpacity, StyleSheet, Modal, Button, Platform } from 'react-native';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '@packages/backend/convex/_generated/api';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const PantryScreen = () => {
   const [search, setSearch] = useState('');
   const [addVisible, setAddVisible] = useState(false);
   const [form, setForm] = useState({ ingredientName: '', quantity: 1, unit: '', expirationDate: '' });
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [date, setDate] = useState(new Date());
 
   const ingredients = useQuery(api.inventory.getIngredients) || [];
   const allIngredients = useQuery(api.ingredients.getAll) || [];
@@ -30,6 +33,14 @@ const PantryScreen = () => {
 
   const handleDelete = async (ingredientId) => {
     await deleteIngredient({ ingredientId });
+  };
+
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      setDate(selectedDate);
+      setForm(f => ({ ...f, expirationDate: selectedDate.toISOString().split('T')[0] }));
+    }
   };
 
   return (
@@ -91,12 +102,17 @@ const PantryScreen = () => {
               value={form.unit}
               editable={false}
             />
-            <TextInput
-              style={styles.input}
-              placeholder="Expiration Date (YYYY-MM-DD)"
-              value={form.expirationDate}
-              onChangeText={text => setForm(f => ({ ...f, expirationDate: text }))}
-            />
+            <TouchableOpacity style={styles.input} onPress={() => setShowDatePicker(true)}>
+              <Text>{form.expirationDate ? `Expiration Date: ${form.expirationDate}` : 'Pick Expiration Date'}</Text>
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={date}
+                mode="date"
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                onChange={handleDateChange}
+              />
+            )}
             <View style={styles.modalButtons}>
               <Button title="Cancel" onPress={() => setAddVisible(false)} />
               <Button title="Add" onPress={handleAdd} />
